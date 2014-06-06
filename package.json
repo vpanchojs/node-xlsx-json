@@ -1,6 +1,6 @@
 {
   "name": "xlsx-to-json",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert xlsx to json",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/DataGarage/node-xml-json",
   "dependencies": {
-    "xlsx": "~0.3.6",
+    "xlsx": "0.7.6-g",
     "csv": "~0.3.6"
   },
   "devDependencies": {
