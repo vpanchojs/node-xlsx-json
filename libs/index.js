@@ -11,12 +11,12 @@ function XLSX_json (config, callback) {
   }
 
   var cv = new CV(config, callback);
-  
+
 }
 
 function CV(config, callback) {
   var wb = this.load_xlsx(config.input)
-  var ws = this.ws(wb);
+  var ws = this.ws(config, wb);
   var csv = this.csv(ws)
   this.cvjson(csv, config.output, callback)
 }
@@ -25,11 +25,12 @@ CV.prototype.load_xlsx = function(input) {
   return xlsx.readFile(input);
 }
 
-CV.prototype.ws = function(wb) {
-  var target_sheet = '';
+CV.prototype.ws = function(config, wb) {
+  var target_sheet = config.sheet;
 
-  if(target_sheet === '') 
+  if (target_sheet == null)
     target_sheet = wb.SheetNames[0];
+
   ws = wb.Sheets[target_sheet];
   return ws;
 }
@@ -49,7 +50,7 @@ CV.prototype.cvjson = function(csv, output, callback) {
       return row;
     })
     .on('record', function(row, index){
-      
+
       if(index === 0) {
         header = row;
       }else{
@@ -70,7 +71,7 @@ CV.prototype.cvjson = function(csv, output, callback) {
       }else {
       	callback(null, record);
       }
-      	
+
     })
     .on('error', function(error){
       console.error(error.message);
