@@ -18,8 +18,9 @@ function CV(config, callback) {
   var wb = this.load_xlsx(config.input)
   var ws = this.ws(config, wb);
   var csv = this.csv(ws)
-  this.cvjson(csv, config.output, callback)
+  this.cvjson(csv, config.output, callback, config.init)
 }
+
 
 CV.prototype.load_xlsx = function(input) {
   return xlsx.readFile(input);
@@ -39,7 +40,7 @@ CV.prototype.csv = function(ws) {
   return csv_file = xlsx.utils.make_csv(ws)
 }
 
-CV.prototype.cvjson = function(csv, output, callback) {
+CV.prototype.cvjson = function(csv, output, callback, init) {
   var record = []
   var header = []
 
@@ -51,14 +52,16 @@ CV.prototype.cvjson = function(csv, output, callback) {
     })
     .on('record', function(row, index){
 
-      if(index === 0) {
+      if(index === init) {
         header = row;
       }else{
-        var obj = {};
-        header.forEach(function(column, index) {
-          obj[column.trim()] = row[index].trim();
-        })
-        record.push(obj);
+        if(index>init){
+          var obj = {};
+          header.forEach(function(column, index) {
+            obj[column.trim()] = row[index].trim();
+          })
+          record.push(obj);
+       }
       }
     })
     .on('end', function(count){
